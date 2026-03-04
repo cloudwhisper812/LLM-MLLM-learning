@@ -38,54 +38,48 @@
     - 统一范式：通过 Prompt Engineering，可以用生成任务解决几乎所有 NLP 问题（分类、翻译、摘要等）。
 
 
-#### 1. BART, UL2 和 T5 的区别是什么？
-> 💡 思考：Encoder-Decoder 家族内斗：BART vs T5 vs UL2
+> ### 💡 进阶思考与架构辨析
 >
-> *   BART (Bidirectional and Auto-Regressive Transformers)：
->     *   架构：最接近原始 Transformer 的标准结构（GPT 风格的 Decoder + BERT 风格的 Encoder）。
->     *   预训练目标：去噪自编码 (Denoising Autoencoder)。它不仅做 Span Mask，还做句子打乱 (Sentence Permutation)、Token 删除、文档旋转等多种噪声还原任务。
->     *   侧重：更像是一个“修复受损文本”的模型，因此在文本生成（如摘要、翻译）上表现极佳，但在理解任务（如分类）上略逊于 T5。
+> #### 1. Encoder-Decoder 家族内斗：BART vs T5 vs UL2
+> *   **BART (Bidirectional and Auto-Regressive Transformers)**
+>     *   **架构**：最接近原始 Transformer 的标准结构（GPT 风格的 Decoder + BERT 风格的 Encoder）。
+>     *   **预训练目标**：**去噪自编码 (Denoising Autoencoder)**。它不仅做 Span Mask，还做**句子打乱 (Sentence Permutation)**、**Token 删除**、**文档旋转**等多种噪声还原任务。
+>     *   **侧重**：更像是一个“修复受损文本”的模型，因此在**文本生成（如摘要、翻译）**上表现极佳，但在理解任务（如分类）上略逊于 T5。
+> *   **T5 (Text-to-Text Transfer Transformer)**
+>     *   **架构**：对 Transformer 做了微调（相对位置编码、LayerNorm 位置等），但核心还是 Encoder-Decoder。
+>     *   **预训练目标**：**Span Corruption (连续片段遮罩)**。只做这一件事，但做得极好。
+>     *   **侧重**：**万物皆 Text-to-Text**。它把分类、回归、翻译都统一成“输入文本 -> 输出文本”的形式，通用性极强。
+> *   **UL2 (Unifying Language Learning Paradigms)**
+>     *   **架构**：基于 T5 改进，但核心是**训练范式的统一**。
+>     *   **预训练目标**：**Mixture of Denoisers (MoD)**。它同时训练三种任务：
+>         1.  **R-Denoiser** (Regular Span Corruption, 像 T5)：适合理解/短生成。
+>         2.  **S-Denoiser** (Sequential Denoising, 像 GPT)：适合长生成/续写。
+>         3.  **X-Denoiser** (Extreme Denoising)：适合极长上下文。
+>     *   **侧重**：**全能选手**。它试图解决“T5 不擅长做 GPT 式续写，GPT 不擅长做 T5 式理解”的问题，是 Google 在 PaLM 之前的集大成者。
 >
-> *   T5 (Text-to-Text Transfer Transformer)：
->     *   架构：对 Transformer 做了微调（相对位置编码、LayerNorm 位置等），但核心还是 Encoder-Decoder。
->     *   预训练目标：Span Corruption (连续片段遮罩)。只做这一件事，但做得极好。
->     *   侧重：万物皆 Text-to-Text。它把分类、回归、翻译都统一成“输入文本 -> 输出文本”的形式，通用性极强。
+> #### 2. 数据对比：Mask 比例与 Decoder 规模
+> *   **Mask 比例**：
+>     *   **BERT**：**15%** (Token-level)。其中 80% 替换为 `[MASK]`，10% 随机词，10% 保持不变。
+>     *   **T5**：**15%** (Span-level)。虽然遮罩的总 Token 数约占 15%，但它是按片段（平均长度 3）来遮罩的。
+>     *   **BGE (RetroMAE)**：
+>         *   **Encoder 端**：**30%** (Mask Ratio)。为了强迫 Encoder 提取语义，遮罩比例比 BERT 高。
+>         *   **Decoder 端**：**50% - 70%** (Aggressive Masking)。Decoder 只能看到极少的词，必须依赖 Encoder 的 `[CLS]` 向量来还原句子。
+> *   **Decoder 层数**：
+>     *   **T5**：**与 Encoder 层数相同**（例如 T5-Base 是 12 层 Encoder + 12 层 Decoder）。它是“对称”的。
+>     *   **BGE (RetroMAE)**：**极浅 (Shallow Decoder)**。通常只有 **1 层** 或 **2 层**。
+>         *   **原因**：Decoder 只是为了辅助 Encoder 训练，推理时直接丢弃。如果 Decoder 太强（层数太多），它自己就能把句子补全了，Encoder 就“偷懒”不学语义了。
 >
-> *   UL2 (Unifying Language Learning Paradigms)：
->     *   架构：基于 T5 改进，但核心是训练范式的统一。
->     *   预训练目标：Mixture of Denoisers (MoD)。它同时训练三种任务：
->         1.  R-Denoiser (Regular Span Corruption, 像 T5)：适合理解/短生成。
->         2.  S-Denoiser (Sequential Denoising, 像 GPT)：适合长生成/续写。
->         3.  X-Denoiser (Extreme Denoising)：适合极长上下文。
->     *   侧重：全能选手。它试图解决“T5 不擅长做 GPT 式续写，GPT 不擅长做 T5 式理解”的问题，是 Google 在 PaLM 之前的集大成者。
-#### 2. BERT, BGE, T5 Mask 的比例 & Decoder 层数
-> 📊 数据对比：Mask 比例与 Decoder 规模
+> #### 3. 深度思考：Scaling Law 的偏爱
+> *   **结论**：Scaling Law **理论上适用所有架构**（T5 也有 Scaling Law 论文），但 **Decoder-only 的“性价比”最高**。
+> *   **原因**：
+>     1.  **训练效率**：Decoder-only (GPT) 是单向注意力，计算 Attention 矩阵时可以利用 **Causal Mask** 极大地优化并行计算（FlashAttention 对其优化最极致）。Encoder-Decoder 涉及 Cross-Attention，计算量和显存占用都更大（KV Cache 翻倍）。
+>     2.  **数据利用率**：GPT 的任务是 **Next Token Prediction**，这意味着**每一个 Token 都是训练样本**（预测下一个）。BERT 的 MLM 只能利用 15% 的 Token 进行反向传播。T5 虽然也是生成，但输入部分的 Token 不产生 Loss。
+>     3.  **工程上限**：在千亿参数（100B+）级别，Decoder-only 架构的**稳定性**最好，不容易梯度爆炸或坍塌。Google 的 PaLM (Decoder-only) 证明了这一点，而 T5 到了 11B 之后再往上扩就很难了。
 >
-> *   Mask 比例：
->     *   BERT：15% (Token-level)。其中 80% 替换为 `[MASK]`，10% 随机词，10% 保持不变。
->     *   T5：15% (Span-level)。虽然遮罩的总 Token 数约占 15%，但它是按片段（平均长度 3）来遮罩的。
->     *   BGE (RetroMAE)：
->         *   Encoder 端：30% (Mask Ratio)。为了强迫 Encoder 提取语义，遮罩比例比 BERT 高。
->         *   Decoder 端：50% - 70% (Aggressive Masking)。Decoder 只能看到极少的词，必须依赖 Encoder 的 `[CLS]` 向量来还原句子。
->
-> *   Decoder 层数：
->     *   T5：与 Encoder 层数相同（例如 T5-Base 是 12 层 Encoder + 12 层 Decoder）。它是“对称”的。
->     *   BGE (RetroMAE)：极浅 (Shallow Decoder)。通常只有 1 层 或 2 层。
->         *   原因：Decoder 只是为了辅助 Encoder 训练，推理时直接丢弃。如果 Decoder 太强（层数太多），它自己就能把句子补全了，Encoder 就“偷懒”不学语义了。
-#### 3. 为什么在 Decoder-only 里强调 Scaling Law？其他架构不适用吗？
-> 🤔 深度思考：Scaling Law 的偏爱
->
-> *   结论：Scaling Law 理论上适用所有架构（T5 也有 Scaling Law 论文），但 Decoder-only 的“性价比”最高。
-> *   原因：
->     1.  训练效率：Decoder-only (GPT) 是单向注意力，计算 Attention 矩阵时可以利用 Causal Mask 极大地优化并行计算（FlashAttention 对其优化最极致）。Encoder-Decoder 涉及 Cross-Attention，计算量和显存占用都更大（KV Cache 翻倍）。
->     2.  数据利用率：GPT 的任务是 Next Token Prediction，这意味着每一个 Token 都是训练样本（预测下一个）。BERT 的 MLM 只能利用 15% 的 Token 进行反向传播。T5 虽然也是生成，但输入部分的 Token 不产生 Loss。
->     3.  工程上限：在千亿参数（100B+）级别，Decoder-only 架构的稳定性最好，不容易梯度爆炸或坍塌。Google 的 PaLM (Decoder-only) 证明了这一点，而 T5 到了 11B 之后再往上扩就很难了。
-#### 4. “涌现能力”不是适用其他架构吗？
-> ✨ 观点辨析：涌现能力 (Emergent Abilities) 的归属
->
-> *   事实：涌现能力（如 In-Context Learning, Chain-of-Thought）确实主要在 Decoder-only 架构的大模型（>10B/60B）上被观察到。
-> *   T5/BERT 为什么很少提？
->     *   BERT：它是判别式模型，天生不会“生成”，更别提“思维链推理”了。它只能做分类、抽取。
->     *   T5：虽然是生成式，但 T5 的训练目标（Span Corruption）让它更倾向于“填空”和“翻译”，而不是“自由推理”。
->     *   关键点：涌现能力似乎与 Causal Language Modeling (Next Token Prediction) 这个训练目标强相关。模型为了预测下一个词，被迫学会了逻辑推理、算术、常识等“世界知识”。
-> *   特例：UL2 和 Flan-T5 在经过大规模指令微调（Instruction Tuning）后，也展现出了类似的涌现能力（如 CoT），证明了架构不是绝对壁垒，数据和训练目标才是关键。但 Decoder-only 依然是目前挖掘这种能力最高效的容器。
+> #### 4. 观点辨析：涌现能力 (Emergent Abilities) 的归属
+> *   **事实**：涌现能力（如 In-Context Learning, Chain-of-Thought）确实**主要在 Decoder-only 架构的大模型（>10B/60B）上被观察到**。
+> *   **T5/BERT 为什么很少提？**
+>     *   **BERT**：它是判别式模型，天生不会“生成”，更别提“思维链推理”了。它只能做分类、抽取。
+>     *   **T5**：虽然是生成式，但 T5 的训练目标（Span Corruption）让它更倾向于“填空”和“翻译”，而不是“自由推理”。
+>     *   **关键点**：涌现能力似乎与 **Causal Language Modeling (Next Token Prediction)** 这个训练目标强相关。模型为了预测下一个词，被迫学会了逻辑推理、算术、常识等“世界知识”。
+> *   **特例**：**UL2** 和 **Flan-T5** 在经过大规模指令微调（Instruction Tuning）后，也展现出了类似的涌现能力（如 CoT），证明了**架构不是绝对壁垒，数据和训练目标才是关键**。但 Decoder-only 依然是目前挖掘这种能力最高效的容器。
