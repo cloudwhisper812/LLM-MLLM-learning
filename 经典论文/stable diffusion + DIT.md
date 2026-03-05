@@ -7,7 +7,8 @@
 
 ### 2. 训练流程
 step1. text-image pair, 图片用encoder压缩成feature $z_0$  
-step2. 对不停加噪声
+step2. 对$z_0$不停加噪声, $z_t = \sqrt{\bar{\alpha}_t} z_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon$  
+step3. 
 
 
 U-Net 与 Cross-Attention
