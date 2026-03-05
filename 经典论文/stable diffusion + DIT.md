@@ -8,8 +8,8 @@
 ### 2. 训练流程
 step1. text-image pair, 图片用encoder压缩成feature $z_0$  
 step2. 对 $z_0$ 不停加噪声, $z_t = \sqrt{\bar{\alpha}_t} z_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon$  
-step3. u-net 的输入是在t的噪声图，参数t，以及文本的embedding(cross attenton引入)  
-step4. u-net的输出和噪声算l2 loss，用u-net预测噪声。 真实训练中，对于一个图会sample一个t，u-net只预测t的噪声。
+step3. u-net 的输入是在t的噪声feature，参数t，以及文本的embedding(cross attenton引入)  
+step4. u-net的输出和噪声算l2 loss，用u-net预测噪声。 真实训练中，对于一个图会sample一个t，直接加t次噪声，u-net只预测t的噪声。
 
 inference的时候有多种采样器：DDPM ， DDIM ， Euler a （这部分还没看，后续看一下）
 
