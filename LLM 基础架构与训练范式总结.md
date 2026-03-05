@@ -46,22 +46,24 @@
 
 > ### 💡 进阶思考与架构辨析
 >
-> #### 1. Encoder-Decoder 家族内斗：BART vs T5 vs UL2
-> *   **BART (Bidirectional and Auto-Regressive Transformers)**
->     *   **架构**：最接近原始 Transformer 的标准结构（GPT 风格的 Decoder + BERT 风格的 Encoder）。
->     *   **预训练目标**：**去噪自编码 (Denoising Autoencoder)**。它不仅做 Span Mask，还做**句子打乱 (Sentence Permutation)**、**Token 删除**、**文档旋转**等多种噪声还原任务。
->     *   **侧重**：更像是一个“修复受损文本”的模型，因此在**文本生成（如摘要、翻译）**上表现极佳，但在理解任务（如分类）上略逊于 T5。
-> *   **T5 (Text-to-Text Transfer Transformer)**
->     *   **架构**：对 Transformer 做了微调（相对位置编码、LayerNorm 位置等），但核心还是 Encoder-Decoder。
->     *   **预训练目标**：**Span Corruption (连续片段遮罩)**。只做这一件事，但做得极好。
->     *   **侧重**：**万物皆 Text-to-Text**。它把分类、回归、翻译都统一成“输入文本 -> 输出文本”的形式，通用性极强。
-> *   **UL2 (Unifying Language Learning Paradigms)**
->     *   **架构**：基于 T5 改进，但核心是**训练范式的统一**。
->     *   **预训练目标**：**Mixture of Denoisers (MoD)**。它同时训练三种任务：
->         1.  **R-Denoiser** (Regular Span Corruption, 像 T5)：适合理解/短生成。
->         2.  **S-Denoiser** (Sequential Denoising, 像 GPT)：适合长生成/续写。
->         3.  **X-Denoiser** (Extreme Denoising)：适合极长上下文。
->     *   **侧重**：**全能选手**。它试图解决“T5 不擅长做 GPT 式续写，GPT 不擅长做 T5 式理解”的问题，是 Google 在 PaLM 之前的集大成者。
+> #### 1.Encoder-Decoder进化史：家族的三部曲
+> *   **BART (探索者)**：**“试错与验证”**
+>     *   **核心贡献**：证明了 Encoder-Decoder 架构在生成任务（如摘要、翻译）上的巨大潜力。
+>     *   **训练策略**：**去噪自编码 (Denoising Autoencoder)**。尝试了“句子打乱、删除、旋转、遮罩”等多种噪声还原任务。
+>     *   **局限**：任务虽多但杂，后续证明除了 **Span Masking** 外，其他花哨操作（如旋转）收益甚微。
+>
+> *   **T5 (精简者)**：**“做减法，极致专一”**
+>     *   **核心贡献**：确立了 **Text-to-Text** 的统一范式，成为 NLP 领域的瑞士军刀。
+>     *   **训练策略**：**Span Corruption (连续片段遮罩)**。吸取 BART 的教训，只保留最有效的“填空”任务，并做到极致。
+>     *   **侧重**：理解与短生成能力极强，但在长文本续写（GPT 模式）上略显吃力。
+>
+> *   **UL2 (集大成者)**：**“做加法，全能统一”**
+>     *   **核心贡献**：解决了“T5 不擅长续写，GPT 不擅长理解”的矛盾，是 Google 在 PaLM 之前的终极优化。
+>     *   **训练策略**：**Mixture of Denoisers (MoD)**。
+>         1.  **R-Denoiser** (像 T5)：练理解。
+>         2.  **S-Denoiser** (像 GPT)：练续写。
+>         3.  **X-Denoiser** (极端遮罩)：练长文。
+>     *   **侧重**：通过 **Mode Token** 灵活切换任务模式，实现了理解与生成的完美统一。
 >
 > #### 2. 数据对比：Mask 比例与 Decoder 规模
 > *   **Mask 比例**：
