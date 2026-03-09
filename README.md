@@ -22,8 +22,8 @@
 | [04. scaling law](基础知识/06.%20scaling%20law.md) | Power Law, Chinchilla, D≈20N, C≈6ND |
 | [05. MoE](基础知识/07.%20MoE.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
 | [06. optimizer](基础知识/08.%20optimizer.md) | Momentum, adaptive learning rate, adam, adamW |
-| [07. KV cache](基础知识/09.%20kv%20cache.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
-| [08. Flash Attention](基础知识/10.%20flash%20attention.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
+| [07. KV cache](基础知识/09.%20kv%20cache.md) | 显存计算, MHA/MQA/GQA, PagedAttention |
+| [08. Flash Attention](基础知识/10.%20flash%20attention.md) | 切块, Memory bandwidth, Online softmax |
 
 ---
 
