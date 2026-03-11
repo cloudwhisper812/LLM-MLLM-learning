@@ -32,7 +32,7 @@
 ---
 
 ## 三、经典论文
-参考：https://github.com/Hannibal046/Awesome-LLM， https://github.com/friedrichor/Awesome-Multimodal-Papers
+参考：https://github.com/Hannibal046/Awesome-LLM https://github.com/friedrichor/Awesome-Multimodal-Papers
 | 主题 | 内容 |
 |------|------|
 | [stable diffusion + DIT](经典论文/stable%20diffusion%20+%20DIT.md) | LDM, VAE, U-Net, DiT |
