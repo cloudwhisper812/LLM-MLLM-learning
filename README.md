@@ -4,19 +4,7 @@
 [![Commit Activity (month)](https://img.shields.io/github/commit-activity/m/cloudwhisper812/LLM-MLLM-learning/main?label=commits%2Fmonth)](https://github.com/cloudwhisper812/LLM-MLLM-learning)
 
 
-这是一个以 **Markdown 笔记**为主的 LLM / MLLM 学习仓库，内容来自 **论文阅读 + 与大模型交互问答 + 个人理解整理**。不拘泥于公式推导，目标是 **快速召回、温故知新**。
-
-- **内容定位**：知识梳理 / 论文笔记（非可运行训练代码仓库）
-- **笔记分块**：**个人总结**、**基础知识**、**经典论文**
-- **后续计划**：增加大模型 coding 相关内容
-
-## 快速开始
-
-- **阅读入口**：从下方目录开始点链接阅读
-- **查找内容**：用编辑器全局搜索关键词（或在 GitHub 上用仓库搜索）
-- **目录说明**：
-  - `基础知识/`：概念与方法（偏体系化梳理）
-  - `经典论文/`：论文阅读笔记（偏 paper 复盘）
+目前笔记主要分为三块：**个人总结**、**基础知识**（和**经典论文**（后续计划增加大模型 coding 部分）。学习方式主要是看论文 + 和大模型交互问答，以个人理解为主，不拘泥于公式推导，旨在遗忘时能快速召回、温故知新。
 
 
 ## 一、个人总结
@@ -51,18 +39,8 @@
 ---
 
 ## 三、经典论文
-参考：
-- https://github.com/Hannibal046/Awesome-LLM
-- https://github.com/friedrichor/Awesome-Multimodal-Papers
-
+参考：https://github.com/Hannibal046/Awesome-LLM https://github.com/friedrichor/Awesome-Multimodal-Papers
 | 主题 | 内容 |
 |------|------|
 | [stable diffusion + DIT](经典论文/stable%20diffusion%20+%20DIT.md) | LDM, VAE, U-Net, DiT |
 | [siglip 1 and 2](经典论文/siglip%201%20and%202.md) | 二分类, MAP, NaViT, 自蒸馏, LocCa |
-
----
-
-## 贡献方式（可选）
-
-- **新增笔记**：在 `基础知识/` 或 `经典论文/` 下新增 `.md`，并在本 README 的表格里补一行链接
-- **命名建议**：优先用 `NN. topic.md` 形式便于排序；文件名尽量稳定，避免频繁改名导致链接失效
