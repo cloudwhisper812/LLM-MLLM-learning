@@ -7,4 +7,4 @@
 
 
 ### Q-LoRA
-https://github.com/cloudwhisper812/LLM_MLLM_learning/blob/main/%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87/QLoRA.md
+https://github.com/cloudwhisper812/LLM_MLLM_learning/blob/main/%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87/Qlora.md
