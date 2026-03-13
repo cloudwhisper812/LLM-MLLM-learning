@@ -28,7 +28,7 @@
 | [06. optimizer](基础知识/08.%20optimizer.md) | Momentum, adaptive learning rate, adam, adamW |
 | [07. KV cache](基础知识/09.%20kv%20cache.md) | 显存计算, MHA/MQA/GQA, PagedAttention |
 | [08. Flash Attention](基础知识/10.%20flash%20attention.md) | IO bound 问题, 块化到 SRAM, online softmax |
-| [09. LoRA](基础知识/11.%20LoRA.md) | Low-rank adaptation, 参数高效微调 |
+| [09. LoRA](基础知识/11.%20LoRA.md) | Low-rank adaptation, 参数高效微调, 及 Q-LoRA 相关笔记 |
 | [10. RAG](基础知识/12.%20RAG.md) | 幻觉与时效性, chunking→embedding→索引→ANN+重排→生成 |
 | [11. decoding strategy](基础知识/13.%20decoding%20strategy.md) | Greedy, Beam Search, Sampling, Top-k/top-p, Temperature |
 | [12. tokenizer](基础知识/14.%20tokenizer.md) | subword 动机, BPE 工作机制, special tokens 与 embedding |
@@ -42,5 +42,6 @@
 参考：https://github.com/Hannibal046/Awesome-LLM https://github.com/friedrichor/Awesome-Multimodal-Papers
 | 主题 | 内容 |
 |------|------|
+| [Qlora](经典论文/Qlora.md) | QLoRA: 量化后的高效微调, NF4+LoRA 的整体设计 |
 | [stable diffusion + DIT](经典论文/stable%20diffusion%20+%20DIT.md) | LDM, VAE, U-Net, DiT |
 | [siglip 1 and 2](经典论文/siglip%201%20and%202.md) | 二分类, MAP, NaViT, 自蒸馏, LocCa |
