@@ -1,4 +1,4 @@
-AWQ (Activation-aware Weight Quantization): 保护 1% 精英的 INT4 量化艺术
+# AWQ (Activation-aware Weight Quantization): 保护 1% 精英的 INT4 量化艺术
 
 ## 1. 背景：解决的是什么问题？算法核心
 - 大模型的权重分布是极度不平等的，存在大约 **1% 的“显著权重（Salient Weights）”**，它们决定了模型 99% 的智商。如果用传统的 Round-To-Nearest (RTN) 把所有权重一视同仁地硬切成 INT4，这 1% 的关键权重会产生巨大的舍入误差，直接导致模型输出崩溃。
