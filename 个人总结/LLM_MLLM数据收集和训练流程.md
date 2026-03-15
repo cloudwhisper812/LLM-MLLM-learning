@@ -1,3 +1,55 @@
 ## LLM
 ### 1. Pre-training 阶段
-数据：海量无标签语料（几 T 到几十 T tokens）。包括网页抓取（CommonCrawl）、高质量书籍、论文，以及极高比例的代码 (Code) 和数学 (Math) 数据。
+数据：
+- 海量无标签语料（几 T 到几十 T tokens）。包括网页抓取（CommonCrawl）、高质量书籍、论文，以及极高比例的代码 (Code) 和数学 (Math) 数据。
+- 数据处理：
+  <details>
+    <summary>文本提取与清洗 (Text Extraction)</summary>
+    将 HTML 网页还原为干净的、带有正确换行逻辑的文本，这是保住代码和数学公式格式的生死线。最主流方法： Resiliparse 或 Trafilatura。过去用简单的正则或 BeautifulSoup 剥离 HTML 标签，会导致段落粘连。现在的主流方案是基于 DOM 树结构的特征（如文本节点密度、标签比例）来识别正文区域。对于包含 pre 或 code 标签的区域，必须保留其原始的空格和缩进，否则模型根本学不会 Python。
+  </details>
+  <details>
+    <summary>语种识别</summary>
+    过滤掉不需要的语种，或者为后续的语种配比（Data Mix）打标签。极其轻量级的 $N$-gram 线性分类器。为了极致的性能，通常会用 C++ 直接绑定在数据流处理框架中，单 CPU 核心每秒能处理上万条文档。
+  </details>
+  <details>
+    <summary>启发式规则过滤 (Heuristic Filtering)</summary>
+    用计算代价极低的规则，快速筛掉极其劣质的“垃圾堆”（如日志文件、SEO 占位符、乱码）。最主流方法： 借鉴 MassiveText (Gopher) 或 RedPajama 的规则集。核心细节： 常见规则包括：字母/数字字符比例（Alphanumeric ratio）：剔除全是符号的乱码。停用词密度（Stop-word density）：正常的自然语言一定会包含一定比例的 "the", "is", "的", "了"。如果不包含，极大概率是名词堆砌的 SEO 网页或机器生成的垃圾。平均单词/句子长度：过长或过短都直接丢弃。
+  </details>
+  <details>
+    <summary>模糊与精确去重 (Deduplication)</summary>
+    模糊去重 MinHash + LSH (Locality Sensitive Hashing)。提取文档的原 N-gram，用多个 Hash 函数计算 MinHash 签名，再通过 LSH 分桶。由于处理的是 PB 级数据，这部分必须在 Spark 或 Ray 集群上做大规模分布式 MapReduce 计算。精确/子串去重 Suffix Array (后缀数组)。不仅去重整篇文档，还要把跨文档的重复片段（如网站底部的版权声明、开源协议模板）挖掉。通过构建全局的 Suffix Array，可以找到语料库中所有长度大于 $k$（如 50 个 Token）的重复子串并将其 Mask 掉。
+  </details>
+  <details>
+    <summary>质量过滤 (Quality Filtering / Model-based)</summary>
+    在规则过滤之后，使用模型来判断文章内容的“知识密度”和“逻辑性”。最主流方法： FastText 质量分类器 或 小模型 PPL (Perplexity) 截断。分类器流派： 以维基百科、高质量书籍和论文作为正样本（Label=1），随机 CommonCrawl 网页作为负样本（Label=0），训练一个 FastText 二分类器。给所有网页打分，只保留预测概率大于设定阈值（如 0.6）的数据。PPL 流派： 训练一个非常小（如 100M-1B 参数）的语言模型，或者直接用现成的小模型跑一遍推理，计算整篇文章的困惑度。困惑度太高的（语句不通顺）或太低的（车轱辘话反复说）都会被过滤。
+  </details>
+  <details>
+    <summary>Benchmark 去污染 (De-contamination)</summary>
+    防止测试集（如 MMLU, GSM8K, HumanEval）泄漏到训练集中，保证评测的客观性。最主流方法： 精确 N-gram 匹配 + Bloom Filter。通常取 $N=13$ 或 $N=15$。考虑到评测集的 Prompt 可能被各种魔改，还会去掉标点和空格进行归一化匹配。为了加速查找，会先将所有评测集的 N-gram 存入一个巨大的 Bloom Filter 中。数据流过时，一旦在 Bloom Filter 中命中，再进行精确核对，若命中率超过阈值则整篇丢弃或进行截断。
+  </details>
+  <details>
+    <summary>隐私脱敏 (PII Removal)</summary>
+    移除敏感个人信息（Personally Identifiable Information）。 最主流方法： 高度优化的正则表达式引擎 (如 RE2) + 局部 NER 模型。核心细节： 大规模正则匹配极其消耗 CPU。工业界通常不用 Python 原生的 re 模块，而是使用 Google 开发的 RE2（基于确定性有限状态自动机 DFA），保证匹配时间的线性复杂度，避免正则回溯引发的 CPU 灾难。对于身份证号、邮箱、电话、IP 地址用正则；对于某些特定的敏感人名或机构，可能会辅以轻量级的命名实体识别（NER）模型，将它们替换为 &lt;|EMAIL|&gt;、&lt;|PHONE|&gt; 等占位符。
+  </details>
+
+
+训练：
+- Loss 是在每一个 Token 的位置上都进行计算的，不区分 Question 和 Answer。
+- 为了 GPU 利用率，通常会将多篇文章拼接到一个最大上下文窗口（如 4k 或 8k），中间用特殊的 <|endoftext|> token 隔开。这里的关键是Attention Mask 的处理，有时会采用 Document Masking 防止跨文章的注意力污染。
+- Data Annealing (数据退火)：在预训练的最后 5%~10% 阶段，大幅降低学习率，并极大地提升高质量数据（如精选维基、教科书、高质量代码）的采样权重。这能让模型性能产生一次跃升。
+
+### 2. SFT/Instruct Tuning(指令微调)
+主要目的：将“续写机器”变成“对话助手”，学习指令的格式和拒绝策略（Alignment Tax 往往在这里产生）。
+数据：
+- 几万到几十万条高质量的 (Prompt, Response) 对。数据量不大，但对质量要求极度苛刻。核心目的是防止模式崩溃（Mode Collapse），即模型只会用一种语气回答问题。
+- System Prompt 鲁棒性：训练数据中需要混入各种 System Prompt，甚至刻意加入带有约束条件的复杂指令（Evol-Instruct）。
+- 语义聚类与多样性采样 (Diversity Routing)： 用一个 Embedding 模型（如 BGE 或 OpenAI 的 API）把所有指令转成高维向量。然后使用 K-Center Greedy 算法或 HDBSCAN 进行聚类。在每个簇（Cluster）中，根据预先训练的质量打分模型（Reward Model）挑出分数最高的 Top-K 条。这样既保证了质量，又保证了指令在语义空间上的均匀覆盖。
+- 数据收集流程：
+  - 人工精造 (Human Annotation) —— 占比约 10%-20%
+  - 存量语料转换 (Corpus Conversion) —— 占比约 30%： 将现有的高质量结构化数据“翻译”成对话，考试题库、维基百科词条、GitHub 代码段。
+  - 模型自生成 (Synthetic Data / Distillation) —— 占比约 50% 以上：
+    - 1. 种子指令采样： 从人工精造的 2000 条种子数据中采样 5 条。
+
+
+训练：
+- Loss Masking (掩码损失)：在计算 Cross-Entropy Loss 时，只对 Response 部分计算梯度，Prompt 部分的 Loss 被 Mask 掉。模型不需要学习去预测用户的提问。
