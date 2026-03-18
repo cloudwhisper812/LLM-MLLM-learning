@@ -55,6 +55,7 @@
 | [Janus and Janus-Pro](经典论文/Janus%20%20and%20Janus-Pro.md) | 视觉理解/生成双编码器解耦 + 统一 LLM 融合（SigLIP + VQ Tokenizer） |
 | [Stable Diffusion + DiT](经典论文/Stable%20Diffusion%20+%20DiT.md) | LDM, VAE, U-Net, DiT |
 | [SigLIP 1 and 2](经典论文/SigLIP%201%20and%202.md) | 二分类, MAP, NaViT, 自蒸馏, LocCa |
+| [ControlNet](经典论文/ControlNet.md) | Adding Conditional Control to Diffusion Models |
 
 
 
