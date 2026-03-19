@@ -1,6 +1,6 @@
 ##  一、核心技术点
 1. 模型框架
-    * 之前学习的基础知识基本都用上了：GQA, SwiGLU, RoPE, QKV bias（这是啥？）, RMSNorm, pre-normaliation, MoE(fine-grained expert segmentation, shared experts routing), Tie Embedding(3B及一下模型)。
+    * 之前学习的基础知识基本都用上了：GQA, SwiGLU, RoPE, QKV bias（不都不用了吗）, RMSNorm, pre-normaliation, MoE(fine-grained expert segmentation, shared experts routing), Tie Embedding(3B及一下模型)。
     * 0.5B - 72B, Dense, MoE(Turbo, Plus), Coder, Math, QwQ
 2. 预训练
     * 2.1 数据： 7T -> 18T. 除了规则，用大模型做过滤打分。注入math，coder数据。Qwen2生成合成数据。数据配比，下采样电商社交媒体水文，上采样科学等高价值。
