@@ -24,7 +24,7 @@
 |------|------|
 | [01. Activation Function](基础知识/Activation%20Function.md) | sigmoid, tanh, relu, GeLU, Swish, SwiGLU |
 | [02. Transformer Block](基础知识/Transformer%20Block.md) | MultiHeadAttention, FeedForward Network, LayerNorm, Residual Connection |
-| [03. Positional Embedding](基础知识/Positional%20Embedding.md) | Sinusoidal PE, Learnable PE, RoPE, Alibi |
+| [03. Positional Embedding](基础知识/Positional%20Embedding.md) |  重点是RoPE |
 | [04. Normalization](基础知识/Normalization.md) | LN vs BN, Pre-Norm vs Post-Norm, RMSNorm |
 | [05. Scaling Law](基础知识/Scaling%20Law.md) | Power Law, Chinchilla, D≈20N, C≈6ND |
 | [06. MoE](基础知识/MoE.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
