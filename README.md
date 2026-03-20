@@ -23,20 +23,22 @@
 | 主题 | 内容 |
 |------|------|
 | [01. Activation Function](基础知识/Activation%20Function.md) | sigmoid, tanh, relu, GeLU, Swish, SwiGLU |
-| [02. Positional Embedding](基础知识/Positional%20Embedding.md) | Sinusoidal PE, Learnable PE, RoPE, Alibi |
-| [03. Normalization](基础知识/Normalization.md) | LN vs BN, Pre-Norm vs Post-Norm, RMSNorm |
-| [04. Scaling Law](基础知识/Scaling%20Law.md) | Power Law, Chinchilla, D≈20N, C≈6ND |
-| [05. MoE](基础知识/MoE.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
-| [06. Optimizer](基础知识/Optimizer.md) | Momentum, adaptive learning rate, adam, adamW |
-| [07. KV Cache](基础知识/KV%20cache.md) | 显存计算, MHA/MQA/GQA, PagedAttention |
-| [08. Flash Attention](基础知识/FlashAttention.md) | IO bound 问题, 块化到 SRAM, online softmax |
-| [09. LoRA](基础知识/LoRA.md) | Low-rank adaptation, 参数高效微调, 及 Q-LoRA 相关笔记 |
-| [10. RAG](基础知识/RAG.md) | 幻觉与时效性, chunking→embedding→索引→ANN+重排→生成 |
-| [11. Decoding Strategy](基础知识/Decoding%20Strategy.md) | Greedy, Beam Search, Sampling, Top-k/top-p, Temperature |
-| [12. Tokenizer](基础知识/Tokenizer.md) | subword 动机, BPE 工作机制, special tokens 与 embedding |
-| [13. Quantization](基础知识/Quantization.md) | NF4, QLoRA, GPTQ/AWQ 等主流量化方案 |
-| [14. Distributed Training](基础知识/Distributed%20Training.md) | 数据并行/张量并行/流水线并行, 通信与显存 |
-| [15. RL](基础知识/RL.md) | 大模型对齐中的 PPO, DPO, GRPO |
+| [02. Transformer Block](基础知识/Transformer%20Block.md) | MultiHeadAttention, FeedForward Network, LayerNorm, Residual Connection |
+| [03. Positional Embedding](基础知识/Positional%20Embedding.md) | Sinusoidal PE, Learnable PE, RoPE, Alibi |
+| [04. Normalization](基础知识/Normalization.md) | LN vs BN, Pre-Norm vs Post-Norm, RMSNorm |
+| [05. Scaling Law](基础知识/Scaling%20Law.md) | Power Law, Chinchilla, D≈20N, C≈6ND |
+| [06. MoE](基础知识/MoE.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
+| [07. Optimizer](基础知识/Optimizer.md) | Momentum, adaptive learning rate, adam, adamW |
+| [08. KV Cache](基础知识/KV%20cache.md) | 显存计算, MHA/MQA/GQA, PagedAttention |
+| [09. Flash Attention](基础知识/FlashAttention.md) | IO bound 问题, 块化到 SRAM, online softmax |
+| [10. LoRA](基础知识/LoRA.md) | Low-rank adaptation, 参数高效微调, 及 Q-LoRA 相关笔记 |
+| [11. RAG](基础知识/RAG.md) | 幻觉与时效性, chunking→embedding→索引→ANN+重排→生成 |
+| [12. Decoding Strategy](基础知识/Decoding%20Strategy.md) | Greedy, Beam Search, Sampling, Top-k/top-p, Temperature |
+| [13. Tokenizer](基础知识/Tokenizer.md) | subword 动机, BPE 工作机制, special tokens 与 embedding |
+| [14. Quantization](基础知识/Quantization.md) | NF4, QLoRA, GPTQ/AWQ 等主流量化方案 |
+| [15. Distributed Training](基础知识/Distributed%20Training.md) | 数据并行/张量并行/流水线并行, 通信与显存 |
+| [16. RL](基础知识/RL.md) | 大模型对齐中的 PPO, DPO, GRPO |
+| [17. DCA](基础知识/DCA.md) | Dual Chunk Attention (Qwen2.5-1M Long Context) |
 
 ---
 
@@ -49,6 +51,7 @@
 | [ReAct](经典论文/ReAct.md) | Thought -> Action -> Observation |
 | [AWQ(Activation-aware Weight Quantization)](经典论文/AWQ(Activation-aware%20Weight%20Quantization).md) | Activation-aware Weight Quantization |
 | [Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters](经典论文/Scaling%20LLM%20Test-Time%20Compute%20Optimally%20can%20be%20More%20Effective%20than%20Scaling%20Model%20Parameters.md) |Test-Time Scaling|
+| [Qwen2.5](经典论文/Qwen2.5.md) | Core technical points, pre-training, post-training (SFT, DPO, GRPO), and model variants |
 
 ### **MLLM / CV Papers**
 | 主题 | 内容 |
