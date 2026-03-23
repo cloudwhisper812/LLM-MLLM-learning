@@ -15,6 +15,7 @@
 | [02. MLLM架构](个人总结/MLLM架构(LLaVA,%20BLIP,%20Flamingo,%20end2end).md) | LLaVA, BLIP (Q-Former, CapFilt), Flamingo (Perceiver, interleaved) |
 | [03. LLM/MLLM数据收集和训练流程总结](个人总结/LLM_MLLM数据收集和训练流程.md) | LLM/MLLM Data Collection and Training Pipeline |
 | [04. LLM_MLLM评估](个人总结/LLM_MLLM评估.md) | MMMU, MMBench, DocVQA, POPE, ScreenQA |
+| [05. 推理训练速度优化](个人总结/推理训练速度优化.md) | Inference and Training Speed Optimization |
 
 ---
 
@@ -24,7 +25,7 @@
 |------|------|
 | [01. Activation Function](基础知识/Activation%20Function.md) | sigmoid, tanh, relu, GeLU, Swish, SwiGLU |
 | [02. Transformer Block](基础知识/Transformer%20Block.md) | MultiHeadAttention, FeedForward Network, LayerNorm, Residual Connection |
-| [03. Positional Embedding](基础知识/Positional%20Embedding.md) |  重点是RoPE |
+| [03. Positional Embedding](基础知识/Positional%20Embedding.md) | Sinusoidal PE, Learnable PE, RoPE (ABF, YaRN), Alibi |
 | [04. Normalization](基础知识/Normalization.md) | LN vs BN, Pre-Norm vs Post-Norm, RMSNorm |
 | [05. Scaling Law](基础知识/Scaling%20Law.md) | Power Law, Chinchilla, D≈20N, C≈6ND |
 | [06. MoE](基础知识/MoE.md) | Router, Experts, Load Balancing, Top-K, Expert Capacity |
@@ -49,7 +50,7 @@
 |------|------|
 | [QLoRA](经典论文/QLoRA.md) | QLoRA: 量化后的高效微调, NF4+LoRA 的整体设计 |
 | [ReAct](经典论文/ReAct.md) | Thought -> Action -> Observation |
-| [AWQ(Activation-aware Weight Quantization)](经典论文/AWQ(Activation-aware%20Weight%20Quantization).md) | Activation-aware Weight Quantization |
+| [AWQ + Smoothquant](经典论文/AWQ%20+%20Smoothquant.md) | Activation-aware Weight Quantization + Smoothquant |
 | [Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters](经典论文/Scaling%20LLM%20Test-Time%20Compute%20Optimally%20can%20be%20More%20Effective%20than%20Scaling%20Model%20Parameters.md) |Test-Time Scaling|
 | [Qwen2.5](经典论文/Qwen2.5.md) | Core technical points, pre-training, post-training (SFT, DPO, GRPO), and model variants |
 
