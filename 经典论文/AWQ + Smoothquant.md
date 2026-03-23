@@ -1,5 +1,7 @@
 > AWQ 通常是w4a16，因为w已经量化太多，为了保持精度a16。AWQ的适用场景是显存bound，节省内存。
 > SmoothQuant适合服务端高并发高吞吐量，w8a8。因为公司场景大batch，通常是coumpute bound。而且高并发对话场景中KV Cache也是一种激活。
+> AWQ是看a的脸色保w的命。它通过观察 A 找到了 W 中的“VIP”，然后把量化误差从“VIP 权重”转移给了“普通权重”。
+> a更难量化，w一般范围都比较小和固定，所以SmoothQuant把a的量化难度大的channel转移到w的量化难度上。为了把 A 压到 8-bit，它把 A 里的极端离群点“削平”，并将这份压力转移给了原本很容易量化的 W。
 # AWQ (Activation-aware Weight Quantization)
 
 ## 1. 背景：解决的是什么问题？算法核心
@@ -34,3 +36,5 @@ AWQ并不是硬性截断找出1%的参数不量化，剩下99%的参数量化。
   * **工具**：vLLM 或 TensorRT-LLM。
   * **现状**：由于 LLM 的推理是极度 Memory-Bound（显存带宽瓶颈）的，AWQ 打包好的 INT4 权重能让显存读取量减少近 70%。借助底层高度优化的 W4A16 GEMM 算子，AWQ 格式的模型在吞吐量（Throughput）和首字延迟（TTFT）上，是目前工业界高并发 C 端业务的绝对标配。
   * infer的时候参数反量化到fp16和tensor fp16计算。
+ 
+# SmoothQuant
