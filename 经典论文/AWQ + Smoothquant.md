@@ -1,6 +1,9 @@
 > AWQ 通常是w4a16，因为w已经量化太多，为了保持精度a16。AWQ的适用场景是显存bound，节省内存。
+> 
 > SmoothQuant适合服务端高并发高吞吐量，w8a8。因为公司场景大batch，通常是coumpute bound。而且高并发对话场景中KV Cache也是一种激活。
+> 
 > AWQ是看a的脸色保w的命。它通过观察 A 找到了 W 中的“VIP”，然后把量化误差从“VIP 权重”转移给了“普通权重”。
+> 
 > a更难量化，w一般范围都比较小和固定，所以SmoothQuant把a的量化难度大的channel转移到w的量化难度上。为了把 A 压到 8-bit，它把 A 里的极端离群点“削平”，并将这份压力转移给了原本很容易量化的 W。
 # AWQ (Activation-aware Weight Quantization)
 
