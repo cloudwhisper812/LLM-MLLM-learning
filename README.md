@@ -62,6 +62,7 @@
 | [Stable Diffusion + DiT](经典论文/Stable%20Diffusion%20+%20DiT.md) | LDM, VAE, U-Net, DiT |
 | [SigLIP 1 and 2](经典论文/SigLIP%201%20and%202.md) | 二分类, MAP, NaViT, 自蒸馏, LocCa |
 | [ControlNet](经典论文/ControlNet.md) | Adding Conditional Control to Diffusion Models |
+| [DINO and Grounding DINO](经典论文/DINO%20and%20Grounding%20DINO.md) | DINO (unsupervised ViT feature learning) and Grounding DINO (DETR-like, image/text encoders, cross-attention, object queries, automated labeling, asymmetric augmentation for robust detection) |
 | [Qwen3 VL](经典论文/Qwen3%20VL.md) | Model (SigLip2, enhanced MRoPE, DeepStack), Pre-training (VL engine, instance-level data, 3 stages), Post-training (SFT, distillation, Reasoning/General RL) |
 | [Qwen 2.5 VL](经典论文/Qwen%202.5%20VL.md) | M-RoPE Dynamic FPS, Rejection Sampling, SFT + DPO |
 
