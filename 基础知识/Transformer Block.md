@@ -73,3 +73,12 @@ class TransformeBlock(nn.Module):
         # 这里的mlp有两层，中间的激活函数是transformer block中唯一一次
         x = x + self.mlp(self.ln2(x))
 ```
+
+这里总结下transformer里面各个维度的常见数字：
+1. 词的embedding dim通常等于d model，也叫hidden size。 小模型 bert 768， 中模型 llama 4096， 大模型 gpt3 175b， llama 70b 8192甚至更高。通常是64，128的倍数为了迎合gpu并行计算效率。
+2. d head(也是d k， d v， d q), d_model = num_heads * d_model.
+    - d_head 几乎所有模型不管多大都是64或者128，因为这个大小在计算attention分数softmax时候最稳定，且计算最快。
+    - num heads，因为d head固定了，所以模型越大head就越多。可以算出来bert 12个头，llama 7b 32个头， gpt 3 96个头。
+3. ffn的hidden dimension，也叫intermediat_size, ffn_dim。先升后降，通常是d model的四倍，但是因为后来用swiglu通常是d model的 8/3倍。
+4. vocab_size：bert,gpt早期是3w-5w，现在qwen，gpt4通常10w到15w。
+5. sequence len：bert 512， llama1 2048，现在已经8k，32k，128k，甚至1m。
