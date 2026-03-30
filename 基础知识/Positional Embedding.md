@@ -3,7 +3,7 @@
 
 ### 1. 绝对位置编码
 #### 1.1 Sinusoidal PE （Attention Is All You Need 原文）
-- PE_pos_2i = sin(pos/ (1000**(2i/d_model))). PE_pos_2i+1 = cos(pos/ (1000**(2i/d_model)))。 i的范围是0 到 d_model/2 -i 
+- PE_pos_2i = sin(pos/ (1000**(2i/d_model))). PE_pos_2i+1 = cos(pos/ (1000**(2i/d_model)))。 i的范围是0 到 d_model/2 - 1
 - 可以外推(Extrapolation)，但是效果一般。
 - 没有平移不变性(translation invariance)
 #### 1.2 Learnable PE （BERT, GPT-2, ViT）
