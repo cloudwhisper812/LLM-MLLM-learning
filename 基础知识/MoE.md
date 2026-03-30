@@ -1,10 +1,10 @@
 ### MoE
 
-#### 1. 核心架构 (Router + Experts)
+#### 核心架构 (Router + Experts)
 - Experts 通常是多个 FFN (Feed-Forward Network) 层。比如 8 个 FFN，每个结构一模一样，但参数不同。Router 是一个小的线性层 + Softmax。输入 Token x，输出每个专家的权重 G(x)。
 - 流程：Token x 进来。Router 计算权重，只选权重最大的 K 个专家（比如 Top-2）。选择到的专家输出加权求和。虽然有 8 个专家，但每次只算 2 个。
 
-#### 2. 负载均衡 (Load Balancing)
+#### 负载均衡 (Load Balancing)
 - 坍塌 (Collapse) / 赢家通吃 (Winner-take-all)。Router 初始化时，某个专家（比如 Expert 1）的权重稍微大了一点点。Router 发现 Expert 1 训练得好，就拼命把 Token 往它那里发。
 - 解决方案：辅助损失 (Auxiliary Loss / Load Balancing Loss): 强迫 Router 把 Token 均匀分配 给所有专家。 其实就是统计一些case，比如一个batch。尽量的让多个expert都平均的被使用了
 
