@@ -1,4 +1,4 @@
-### DPO
+### DPO (Direct Preference Optimization)
 
 #### 算法核心：
 - 数据要求：三元组数据(输入prompt，chosen answer, reject answer
