@@ -1,5 +1,7 @@
+### DPO
+- 数据要求：三元组数据(输入prompt，chosen answer, reject answer
 
-#### PPO (Proximal Policy Optimization) 
+### PPO (Proximal Policy Optimization) 
 需要4 个模型（假设都是 7B 大小）。它们的输入输出和状态如下：
 - actor model：可训练，输入prompt，输出下一个token的logtis。
 - reference model：冻结，sft阶段的模型副本。作为“锚点”。在 Actor 生成每一个 Token 时，Reference 也会算一下概率。如果 Actor 的概率分布偏离 Reference 太远，就会受到 KL 散度惩罚。这是为了防止模型“灾难性遗忘”或变成只会迎合奖励的复读机。
